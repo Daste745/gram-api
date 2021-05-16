@@ -1,0 +1,22 @@
+services:
+  db:
+    image: postgres:13-alpine
+    volumes:
+      - db:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: gram
+      POSTGRES_USER: gram
+      POSTGRES_PASSWORD: marg
+  redis:
+    image: redis:6-alpine
+    volumes:
+      - ./redis.conf:/etc/redis.conf
+    ports:
+      - 6379:6379
+    command: redis-server /etc/redis.conf
+
+
+volumes:
+  db: {}

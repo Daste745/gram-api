@@ -1,0 +1,11 @@
+fastapi
+fastapi-limiter
+pydantic
+python-multipart
+passlib[bcrypt]
+python-jose[cryptography]
+uvicorn[standard]
+# tortoise-orm[asyncpg]
+git+file:///home/stefan/Projects/Lib/tortoise-orm@feat/pydantic_model_creator-optional-parameter#egg=tortoise-orm
+asyncpg
+aioredis

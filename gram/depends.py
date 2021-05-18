@@ -5,20 +5,9 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import ExpiredSignatureError, JWTError, jwt
 
 from gram.models import User
+from gram.schemas import ExpiredToken, InvalidCredentials
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
-ExpiredToken = HTTPException(
-    status_code=status.HTTP_401_UNAUTHORIZED,
-    detail="Access token has expired",
-    headers={"WWW-Authenticate": "Bearer"},
-)
-
-InvalidCredentials = HTTPException(
-    status_code=status.HTTP_401_UNAUTHORIZED,
-    detail="Invalid credentials",
-    headers={"WWW-Authenticate": "Bearer"},
-)
 
 
 async def current_user(token: str = Depends(oauth2_scheme)) -> User:

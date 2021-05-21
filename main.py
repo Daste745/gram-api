@@ -1,9 +1,11 @@
 from aioredis import create_redis_pool
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, Request, status
+from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi_limiter import FastAPILimiter
 from fastapi_limiter.depends import RateLimiter
 from tortoise.contrib.fastapi import register_tortoise
+from tortoise.validators import ValidationError
 
 from gram.models import User
 from gram.routes import comments, posts, users
@@ -46,3 +48,11 @@ async def generate_token(form_data: OAuth2PasswordRequestForm = Depends()):
 
     token: str = user.access_token()
     return Token(access_token=token, token_type="bearer")
+
+
+@api.exception_handler(ValidationError)
+async def validation_error_handler(request: Request, exc: ValidationError):
+    return JSONResponse(
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        content={"detail": str(exc)},
+    )

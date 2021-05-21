@@ -1,5 +1,7 @@
+import re
 from datetime import datetime, timedelta
 from os import getenv
+from typing import Union
 
 from jose import jwt
 from passlib.hash import bcrypt
@@ -13,15 +15,32 @@ from tortoise.fields import (
     TextField,
 )
 from tortoise.models import Model
+from tortoise.validators import MinLengthValidator, RegexValidator
 
 
 class User(Model):
     id = IntField(pk=True)
     created_at = DatetimeField(auto_now_add=True)
     modified_at = DatetimeField(auto_now=True)
-    username = CharField(max_length=32, unique=True)
-    mail = CharField(max_length=64, null=True)
-    password = CharField(max_length=64)
+    username = CharField(
+        max_length=32,
+        unique=True,
+        validators=[
+            MinLengthValidator(2),
+            RegexValidator(r"^[a-z0-9._-]+$", re.I),
+        ],
+    )
+    mail = CharField(
+        max_length=64,
+        null=True,
+        validators=[
+            RegexValidator(
+                r"^[\w.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$",
+                re.I,
+            )
+        ],
+    )
+    password = CharField(max_length=64, validators=[MinLengthValidator(8)])
     bio = TextField(null=True)
 
     posts = ReverseRelation["Post"]
@@ -46,7 +65,7 @@ class User(Model):
         return bcrypt.verify(password, self.password)
 
     def access_token(self) -> str:
-        data = {
+        data: dict[str, Union[datetime, str]] = {
             "iat": datetime.utcnow(),
             "exp": datetime.utcnow() + timedelta(minutes=60),
             "sub": str(self.id),

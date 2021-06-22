@@ -82,7 +82,12 @@ class Post(Model):
     id = IntField(pk=True)
     created_at = DatetimeField(auto_now_add=True)
     modified_at = DatetimeField(auto_now=True)
-    title = CharField(max_length=32)
+    title = CharField(
+        max_length=32,
+        validators=[
+            RegexValidator(r"^[a-z0-9._-]+$", re.I),
+        ],
+    )
     content = TextField(null=True)
     image_url = TextField()
 

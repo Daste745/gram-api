@@ -9,3 +9,4 @@ uvicorn[standard]
 git+git://github.com/daste745/tortoise-orm@feat/pydantic_model_creator-optional-parameter#egg=tortoise-orm
 asyncpg
 aioredis
+aerich

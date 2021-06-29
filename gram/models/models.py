@@ -27,7 +27,7 @@ class User(Model):
         unique=True,
         validators=[
             MinLengthValidator(2),
-            RegexValidator(r"^[a-z0-9._-]+$", re.I),
+            RegexValidator(r"^[a-z0-9\s._-]+$", re.I),
         ],
     )
     mail = CharField(
@@ -85,7 +85,7 @@ class Post(Model):
     title = CharField(
         max_length=32,
         validators=[
-            RegexValidator(r"^[a-z0-9._-]+$", re.I),
+            RegexValidator(r"^[a-z0-9\s._-]+$", re.I),
         ],
     )
     content = TextField(null=True)

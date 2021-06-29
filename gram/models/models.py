@@ -10,16 +10,16 @@ from tortoise.fields import (
     DatetimeField,
     ForeignKeyField,
     ForeignKeyRelation,
-    IntField,
     ReverseRelation,
     TextField,
+    UUIDField,
 )
 from tortoise.models import Model
 from tortoise.validators import MinLengthValidator, RegexValidator
 
 
 class User(Model):
-    id = IntField(pk=True)
+    id = UUIDField(pk=True)
     created_at = DatetimeField(auto_now_add=True)
     modified_at = DatetimeField(auto_now=True)
     username = CharField(
@@ -79,7 +79,7 @@ class User(Model):
 
 
 class Post(Model):
-    id = IntField(pk=True)
+    id = UUIDField(pk=True)
     created_at = DatetimeField(auto_now_add=True)
     modified_at = DatetimeField(auto_now=True)
     title = CharField(
@@ -112,7 +112,7 @@ class Post(Model):
 
 
 class Comment(Model):
-    id = IntField(pk=True)
+    id = UUIDField(pk=True)
     created_at = DatetimeField(auto_now_add=True)
     modified_at = DatetimeField(auto_now=True)
     content = TextField()

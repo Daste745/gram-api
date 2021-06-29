@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi_limiter.depends import RateLimiter
 from tortoise.contrib.fastapi import HTTPNotFoundError
@@ -44,7 +46,7 @@ async def create_post(
     dependencies=[Depends(RateLimiter(times=1, seconds=10))],
 )
 async def update_post(
-    post_id: int,
+    post_id: UUID,
     updated_post: PydanticPostUpdate,
     user: User = Depends(current_user),
 ):
@@ -69,7 +71,7 @@ async def update_post(
     },
     dependencies=[Depends(RateLimiter(times=5, minutes=1))],
 )
-async def delete_post(post_id: int, user: User = Depends(current_user)):
+async def delete_post(post_id: UUID, user: User = Depends(current_user)):
     post_record = await Post.get(id=post_id).prefetch_related("author")
     if not user == post_record.author:
         raise HTTPException(
@@ -87,5 +89,5 @@ async def delete_post(post_id: int, user: User = Depends(current_user)):
     response_model=PydanticPost,
     responses={404: {"model": HTTPNotFoundError}},
 )
-async def get_post(post_id: int):
+async def get_post(post_id: UUID):
     return await PydanticPost.from_queryset_single(Post.get(id=post_id))

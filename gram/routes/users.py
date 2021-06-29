@@ -1,4 +1,5 @@
 from typing import Optional
+from uuid import UUID
 
 from fastapi import APIRouter, Depends
 from fastapi_limiter.depends import RateLimiter
@@ -63,11 +64,11 @@ async def get_logged_in_user_posts(user: User = Depends(current_user)):
 
 
 @router.get("/{user_id}", response_model=PydanticUser)
-async def get_user(user_id: int):
+async def get_user(user_id: UUID):
     return await PydanticUser.from_queryset_single(User.get(id=user_id))
 
 
 @router.get("/{user_id}/posts", response_model=list[PydanticPost])
-async def get_user_posts(user_id: int):
+async def get_user_posts(user_id: UUID):
     user_record = await User.get(id=user_id)
     return await PydanticPost.from_queryset(Post.filter(author=user_record))

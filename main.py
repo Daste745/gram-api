@@ -1,4 +1,7 @@
+import os
+
 from aioredis import create_redis_pool
+from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, Request, status
 from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordRequestForm
@@ -21,14 +24,26 @@ api.include_router(users.router)
 api.include_router(posts.router)
 api.include_router(comments.router)
 
+if os.path.isfile(".env"):
+    load_dotenv()
+
+TORTOISE_CONFIG = {
+    "connections": {
+        "default": db_connection_string(),
+    },
+    "apps": {
+        "models": {
+            "models": ["gram.models", "aerich.models"],
+        },
+    },
+}
+
 
 @api.on_event("startup")
 async def startup():
     register_tortoise(
         api,
-        modules={"models": ["gram.models"]},
-        db_url=db_connection_string(),
-        generate_schemas=True,
+        config=TORTOISE_CONFIG,
         add_exception_handlers=True,
     )
     redis = await create_redis_pool(redis_connection_string())

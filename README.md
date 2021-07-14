@@ -20,7 +20,7 @@
   ```
 - Run gram with `uvicorn`:
   ```shell
-  uvicorn main:api
+  uvicorn gram:api
   ```
 
 ## Upgrading to new versions

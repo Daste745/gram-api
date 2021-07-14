@@ -7,7 +7,7 @@ from jose import ExpiredSignatureError, JWTError, jwt
 from gram.models import User
 from gram.schemas import ExpiredToken, InvalidCredentials
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
 
 
 async def current_user(token: str = Depends(oauth2_scheme)) -> User:
